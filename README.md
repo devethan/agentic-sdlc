@@ -2,6 +2,26 @@
 
 `agentic-sdlc` explores a human-in-the-loop Agentic Software Development Lifecycle using a simple Todo app as a controlled testbed.
 
+## Todo App Baseline
+
+This repository currently contains the Phase 1 Todo app baseline implemented with Next.js App Router, TypeScript, Tailwind CSS, Zustand, and Vitest configuration.
+
+Run the app:
+
+```bash
+npm run dev
+```
+
+Verify the project:
+
+```bash
+npm run lint
+npm run build
+npm test -- --run
+```
+
+The baseline supports creating todos, marking todos complete, deleting todos, and showing the remaining todo count. State is kept in memory only.
+
 The Todo app is intentionally small. Its purpose is to keep the product domain simple while making the development process observable, repeatable, and auditable.
 
 ## Overview
