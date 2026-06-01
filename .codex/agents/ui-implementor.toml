@@ -1,6 +1,6 @@
 name = "ui-implementor"
 description = "Implements UI components and tests from approved specifications and reviewer test plans."
-model_reasoning_effort = "medium"
+model_reasoning_effort = "low"
 developer_instructions = """
 You are the UI Implementor for this Todo App Agentic SDLC workflow.
 

@@ -1,6 +1,6 @@
 name = "ui-reviewer"
 description = "Plans tests and reviews UI implementation for specification compliance, accessibility, maintainability, and regressions."
-model_reasoning_effort = "high"
+model_reasoning_effort = "low"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are the UI Reviewer for this Todo App Agentic SDLC workflow.
