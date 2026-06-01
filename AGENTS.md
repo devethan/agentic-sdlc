@@ -6,6 +6,19 @@ This repository contains a completed Todo App baseline used as a controlled test
 
 The application code should remain intentionally small. Workflow changes should make the development process more observable, repeatable, and auditable without expanding the product scope unnecessarily.
 
+## Workflow Goals
+
+This workflow exists to:
+
+- Demonstrate practical Agentic SDLC patterns.
+- Reduce context pollution through role isolation and scoped handoffs.
+- Improve traceability from request to specification, implementation, review, and approval.
+- Create auditable development artifacts for each component-oriented change.
+- Simulate a real software engineering team structure with explicit responsibility boundaries.
+- Keep humans responsible for critical product, scope, and approval decisions.
+
+The objective of this repository is not to maximize application complexity. The objective is to demonstrate how specialized AI agents can collaborate within explicit responsibility boundaries while maintaining software engineering discipline.
+
 ## Baseline Commands
 
 - Run the app with `npm run dev`.
@@ -30,14 +43,58 @@ Use this workflow for component-oriented changes:
 7. UI Owner final report
 8. Human PR approval
 
+## Human Responsibilities
+
+The Human remains responsible for:
+
+- Product decisions.
+- Scope decisions.
+- Requirement-level conflict resolution when the UI Owner escalates.
+- Workflow approval or rejection.
+- Pull request approval.
+- Final acceptance of delivered work.
+
+The workflow is human-in-the-loop by design. Agents may prepare artifacts, implement changes, and review results, but critical product and approval decisions remain with the Human.
+
 ## Responsibility Boundaries
 
-- UI Owner may clarify requirements, write specifications, resolve scope questions, and approve the final agent workflow result.
-- UI Reviewer may create test plans and review implementation quality, accessibility, maintainability, test results, and specification compliance.
-- UI Reviewer must not directly modify implementation or test code.
-- UI Implementor may modify implementation and test code based only on the approved specification and test plan.
-- UI Implementor must not change requirements or test intent without sending the issue back to the UI Owner.
+Each custom agent must follow the role-specific instructions defined in `.codex/agents/`.
+
+At the repository level:
+
+- UI Owner owns workflow routing, requirements, and agent-level approval.
+- UI Reviewer owns planning and review, not code modification.
+- UI Implementor owns implementation and tests, not requirement changes.
+- Human owns product decisions, scope decisions, pull request approval, and final acceptance.
 - Human approval happens at the PR level and should not be represented as an agent commit scope.
+
+## Failure Escalation Rules
+
+Subagents do not communicate directly with each other in this workflow. The UI Owner acts as the workflow coordinator and communication broker between subagents.
+
+Agents must escalate conflicts through the UI Owner, who owns workflow routing and decides the next delegation.
+
+At the repository level:
+
+- Requirement, specification, or test-plan conflicts return to UI Owner for routing.
+- Scope changes or product tradeoffs return to the Human through UI Owner.
+- Implementation defects found during review return to UI Owner, who delegates correction to UI Implementor.
+- Verification failures caused by unclear or contradictory requirements return to UI Owner for decision.
+
+Agents should not bypass responsibility boundaries to unblock themselves. If the next step requires a decision outside an agent's role, the agent must stop and escalate.
+
+## Expected Deliverables
+
+Use consistent artifacts for component-oriented workflow changes:
+
+- UI Owner specification: `spec.md`.
+- UI Reviewer test plan: `test-plan.md`.
+- UI Implementor implementation summary: `implementation-summary.md`.
+- UI Reviewer QA review: `qa-review.md`.
+- UI Implementor feedback resolution: updated `implementation-summary.md`.
+- UI Owner final approval report: `final-report.md`.
+
+These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, and what decisions remain with the Human.
 
 ## Context Handoff Rules
 
@@ -59,4 +116,3 @@ Workflow commits should use agent responsibility scopes:
 - `feat(ui-implementor): ...`
 - `fix(ui-implementor): ...`
 - `docs(ui-reviewer): ...`
-
