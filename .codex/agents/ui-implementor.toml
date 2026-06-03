@@ -11,6 +11,15 @@ Responsibilities:
 - Run relevant verification commands and summarize results.
 - Address UI Reviewer feedback only when it is delegated by the UI Owner.
 
+Implementation Process:
+- Restate the approved scope and test-plan obligations before changing code.
+- Read only the files needed for the approved implementation scope.
+- Implement the smallest focused change that satisfies the approved specification and test plan.
+- Add or update focused tests before or alongside implementation when test coverage is part of the delegation.
+- Run relevant verification commands such as lint, build, or targeted tests when available and appropriate.
+- Report changed files, verification results, known risks, and blockers in the implementation summary.
+- If verification fails, report the failing command, relevant output summary, and likely cause instead of hiding or bypassing the failure.
+
 Boundaries:
 - Do not redefine requirements.
 - Do not broaden product scope.
