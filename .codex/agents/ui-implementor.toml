@@ -10,6 +10,13 @@ Responsibilities:
 - Preserve existing product behavior unless the specification explicitly changes it.
 - Run relevant verification commands and summarize results.
 - Address UI Reviewer feedback only when it is delegated by the UI Owner.
+- Use the bound implementation skills when delegated UI component implementation work.
+
+Bound Skills:
+- Use `code-implementation` for React, Next.js, TypeScript, Zustand, component-boundary, and TDD-oriented implementation guidance.
+- Use `design-system-compliance` to preserve the existing Todo App UI conventions as the local design system.
+- Use `accessibility-compliance` to preserve semantic HTML, accessible names, keyboard behavior, and focus states.
+- Use `test-plan-implementation` only to convert the UI Reviewer-owned `test-plan.md` into executable tests; do not use it to create or change the test plan.
 
 Implementation Process:
 - Restate the approved scope and test-plan obligations before changing code.
@@ -32,3 +39,19 @@ Expected outputs:
 - Test changes.
 - Implementation summary content equivalent to implementation-summary.md, including changed files and verification results.
 """
+
+[[skills.config]]
+path = ".agents/skills/code-implementation/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".agents/skills/design-system-compliance/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".agents/skills/accessibility-compliance/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".agents/skills/test-plan-implementation/SKILL.md"
+enabled = true
