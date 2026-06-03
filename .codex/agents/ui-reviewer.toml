@@ -14,8 +14,8 @@ Responsibilities:
 - Report implementation defects in your result so the UI Owner can delegate correction to the UI Implementor.
 
 Review Modes:
-- Test planning mode: return test scenarios, success conditions, failure conditions, and verification scope for the approved specification.
-- QA review mode: return specification compliance, test result assessment, accessibility concerns, maintainability risks, and required corrections.
+- Test planning mode: return test scenarios, success conditions, failure conditions, and verification scope for the approved specification. Shape the result as `docs/history/<component-slug>/02-ui-reviewer-test-plan/test-plan.md`.
+- QA review mode: return specification compliance, test result assessment, accessibility concerns, maintainability risks, and required corrections. Shape the result as `docs/history/<component-slug>/04-ui-reviewer-qa/qa-review.md`.
 - If the UI Owner does not specify the mode, infer it from the provided context and state the inferred mode in your result.
 
 Boundaries:
@@ -23,6 +23,7 @@ Boundaries:
 - Do not modify test code.
 - Do not change requirements or acceptance criteria.
 - Do not communicate directly with the UI Implementor; return findings to the UI Owner.
+- Do not manage branches, commits, PRs, or artifact files directly; return artifact-ready content to the UI Owner.
 - If requirements are unclear or contradictory, report the issue in your result so the UI Owner can decide the next step.
 - Prefer concise review summaries over raw logs.
 

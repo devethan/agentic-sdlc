@@ -88,6 +88,59 @@ UI Owner
 Human PR Approval
 ```
 
+Component work is organized as nested PRs:
+
+```text
+step branch
+  ↓ PR into
+feature branch
+  ↓ PR into
+main
+```
+
+Step branches capture individual Agent workflow decisions, while the feature branch gathers all component work before the final Human-approved PR to `main`.
+
+## Workflow Artifact History
+
+Agent workflow artifacts are stored under `docs/history/<component-slug>/`.
+
+This folder is the public development history for the Agentic SDLC process. It records how each component moved from requirements to test planning, implementation, review, feedback resolution, and final approval.
+
+Standard structure:
+
+```text
+docs/history/
+  <component-slug>/
+    01-ui-owner-spec/
+      spec.md
+      pr.md
+    02-ui-reviewer-test-plan/
+      test-plan.md
+      pr.md
+    03-ui-implementor-build/
+      implementation-summary.md
+      pr.md
+    04-ui-reviewer-qa/
+      qa-review.md
+      pr.md
+    05-ui-implementor-fix/
+      implementation-summary.md
+      pr.md
+    06-ui-owner-final/
+      final-report.md
+      pr.md
+```
+
+The `05-ui-implementor-fix/` step is created only when QA feedback requires implementation changes.
+
+Each step PR includes a `pr.md` artifact that records the branch, base branch, Agent role, summary, verification result, and Human approval state. PR documents are records of already-approved workflow decisions, not the mechanism for obtaining approval.
+
+The repository uses separate Codex surfaces for different concerns:
+
+- `.codex/agents`: role definitions for UI Owner, UI Reviewer, and UI Implementor.
+- `.agents/skills`: reusable execution workflows used by specific Agents.
+- `docs/history`: produced workflow evidence and PR-level audit trail.
+
 ## Human Role
 
 The Human acts as the workflow orchestrator and final PR approval authority.
@@ -268,6 +321,8 @@ Contents:
 ## Git Commit Strategy
 
 Each workflow step should be represented as a separate commit.
+
+Each component workflow should start from a feature branch, and each Agent step should use a short-lived step branch that opens a PR back into the feature branch.
 
 Example for `PR #2 - TodoItem Component`:
 

@@ -85,16 +85,60 @@ Agents should not bypass responsibility boundaries to unblock themselves. If the
 
 ## Expected Deliverables
 
-Use consistent artifacts for component-oriented workflow changes:
+Use consistent artifacts for component-oriented workflow changes. All component workflow artifacts live under `docs/history/<component-slug>/<step-number>-<agent-step>/`.
 
-- UI Owner specification: `spec.md`.
-- UI Reviewer test plan: `test-plan.md`.
-- UI Implementor implementation summary: `implementation-summary.md`.
-- UI Reviewer QA review: `qa-review.md`.
-- UI Implementor feedback resolution: updated `implementation-summary.md`.
-- UI Owner final approval report: `final-report.md`.
+Standard structure:
+
+```text
+docs/history/
+  <component-slug>/
+    01-ui-owner-spec/
+      spec.md
+      pr.md
+    02-ui-reviewer-test-plan/
+      test-plan.md
+      pr.md
+    03-ui-implementor-build/
+      implementation-summary.md
+      pr.md
+    04-ui-reviewer-qa/
+      qa-review.md
+      pr.md
+    05-ui-implementor-fix/
+      implementation-summary.md
+      pr.md
+    06-ui-owner-final/
+      final-report.md
+      pr.md
+```
+
+The `05-ui-implementor-fix/` step is created only when QA feedback requires implementation changes.
+
+Each step PR must include a `pr.md` artifact with:
+
+- Branch name.
+- Base branch.
+- Agent role.
+- Summary.
+- Verification result.
+- Human approval state.
+
+PR documents record already-approved workflow decisions. They are not the mechanism for obtaining Human approval.
 
 These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, and what decisions remain with the Human.
+
+## Branch and PR Flow
+
+Use nested PRs for component-oriented workflow changes:
+
+```text
+step branch -> feature branch -> main
+```
+
+- The Human and UI Owner begin each component discussion on a feature branch.
+- Each Agent workflow step uses a short-lived step branch and opens a PR back into the feature branch.
+- The feature branch gathers all step PRs and opens the final Human-approved PR to `main`.
+- Use role-oriented branch prefixes such as `docs/`, `test/`, `feat/`, and `fix/`.
 
 ## Context Handoff Rules
 
