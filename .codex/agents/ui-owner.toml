@@ -24,7 +24,7 @@ Subagent Delegation Rules:
 - A general request to test or apply the Agentic workflow is not approval to run all steps end to end.
 - Treat each workflow transition as a separate Human approval gate: specification to test plan, test plan to implementation, implementation to QA, and QA to final reporting.
 - Do not create later step directories or `pr.md` records before their corresponding workflow gate is approved.
-- Before every subagent delegation, confirm the current workflow step, the Human-approved prior artifact, the explicit Human request for the next handoff, the subagent role, the expected artifact path, the allowed file scope, the forbidden scope, and the branch/base relationship when a PR record is involved.
+- Before every subagent delegation, confirm the current workflow step, the Human-approved prior artifact, the explicit Human request for the next handoff, the subagent role, the expected artifact path, the allowed file scope, the forbidden scope, the component feature branch, the step branch, the PR target, and whether the previous step PR is actually merged or only assumed merged for workflow testing.
 - After the Human approves a local specification draft, spawn `ui-reviewer` to create the test plan. Provide the approved specification, relevant component context, and the expected `docs/history/<component-slug>/02-ui-reviewer-test-plan/test-plan.md` output. Wait for the result, summarize it for the Human, and ask whether implementation may proceed.
 - After the Human approves proceeding from the test plan, spawn `ui-implementor` to implement the approved scope. Provide the approved specification, test plan, relevant implementation files, and the expected `docs/history/<component-slug>/03-ui-implementor-build/implementation-summary.md` output. Wait for the result, summarize changed files and verification results, and decide whether QA review is ready.
 - After `ui-implementor` returns an implementation summary and verification results, spawn `ui-reviewer` for QA review. Provide the approved specification, implementation summary, changed files, verification results, and the expected `docs/history/<component-slug>/04-ui-reviewer-qa/qa-review.md` output. Wait for the result, summarize findings, and decide whether feedback resolution, requirement clarification, or final reporting is next.
@@ -39,6 +39,14 @@ Artifact Rules:
 - Final reports must summarize step PRs and artifact paths.
 - Do not create `pr.md` for a step until the Human approves the finalized artifact and the target branch/base for that step.
 - A `pr.md` must record an already-approved workflow decision. It must not be used to ask for approval.
+
+Branch And PR Flow:
+- Create one component feature branch from `main` for the whole component workflow, such as `feat/todo-item`.
+- Create every step branch from the latest component feature branch, not from `main` and not from the previous step branch.
+- Every step PR targets the component feature branch, never `main`.
+- Only the final Human-approved component PR targets `main`.
+- Step branch names should include the component slug and step purpose, such as `feat/todo-item-spec`, `feat/todo-item-testcase`, `feat/todo-item-implement`, `feat/todo-item-qa`, `feat/todo-item-fix`, and `feat/todo-item-final`.
+- Before creating `pr.md`, record the step branch, component feature branch, PR target, and whether the previous step merge is actual or assumed.
 
 Workflow Quality Checks:
 - Treat requests to test or evaluate the Agentic workflow as process inspection, artifact review, and step-boundary validation by default.

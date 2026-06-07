@@ -158,6 +158,8 @@ Each step PR must include a `pr.md` artifact with:
 
 - Branch name.
 - Base branch.
+- Component feature branch.
+- Previous step merge state.
 - Agent role.
 - Summary.
 - Verification result.
@@ -172,6 +174,9 @@ PR document preconditions:
 - The relevant step artifact must be finalized.
 - The Human must have approved that step artifact.
 - The branch name and base branch must be known.
+- The branch name must identify the step branch, not the component feature branch.
+- The base branch must be the component feature branch, not `main`.
+- The Human must confirm whether the previous step PR is actually merged or only assumed merged for workflow testing.
 - The `pr.md` must record a completed or approved workflow decision, not propose a decision that still needs Human approval.
 
 ## Branch and PR Flow
@@ -179,13 +184,26 @@ PR document preconditions:
 Use nested PRs for component-oriented workflow changes:
 
 ```text
-step branch -> feature branch -> main
+main -> component feature branch
+step branch -> component feature branch
+component feature branch -> main
 ```
 
-- The Human and UI Owner begin each component discussion on a feature branch.
-- Each Agent workflow step uses a short-lived step branch and opens a PR back into the feature branch.
-- The feature branch gathers all step PRs and opens the final Human-approved PR to `main`.
-- Use role-oriented branch prefixes such as `docs/`, `test/`, `feat/`, and `fix/`.
+- Create one component feature branch from `main` for the whole component workflow, such as `feat/todo-item`.
+- Each workflow step creates a short-lived step branch from the latest component feature branch.
+- Each step branch opens its PR back into the component feature branch, never directly into `main`.
+- Do not create the next step branch from the previous step branch. Create it from the component feature branch after the previous step PR is merged or explicitly assumed merged for workflow testing.
+- The component feature branch gathers all approved step PRs.
+- Only the final Human-approved component PR targets `main`, such as `feat/todo-item -> main`.
+- Step branch names should include the component slug and step purpose, for example:
+  - `feat/todo-item-spec`
+  - `feat/todo-item-testcase`
+  - `feat/todo-item-implement`
+  - `feat/todo-item-qa`
+  - `feat/todo-item-fix`
+  - `feat/todo-item-final`
+- If a workflow is being simulated without real merges, `pr.md` must explicitly record the merge state as assumed, not actual.
+- UI Owner must state the component feature branch, step branch, PR target, and previous step merge state before creating a step `pr.md` or delegating to a subagent.
 
 ## Context Handoff Rules
 
