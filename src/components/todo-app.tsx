@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { TodoItem } from "@/components/todo-item";
 import { useTodoStore } from "@/stores/todo-store";
 
 export function TodoApp() {
@@ -73,36 +74,14 @@ export function TodoApp() {
           ) : (
             <ul className="flex flex-col gap-3">
               {todos.map((todo) => (
-                <li
-                  className="flex items-center gap-3 rounded-md border border-stone-300 bg-white p-3 shadow-sm"
+                <TodoItem
+                  completed={todo.completed}
+                  id={todo.id}
                   key={todo.id}
-                >
-                  <input
-                    aria-label={`Mark ${todo.title} as ${
-                      todo.completed ? "incomplete" : "complete"
-                    }`}
-                    checked={todo.completed}
-                    className="size-5 shrink-0 accent-emerald-700"
-                    onChange={() => toggleTodo(todo.id)}
-                    type="checkbox"
-                  />
-                  <span
-                    className={`min-w-0 flex-1 break-words text-base ${
-                      todo.completed
-                        ? "text-stone-400 line-through"
-                        : "text-stone-900"
-                    }`}
-                  >
-                    {todo.title}
-                  </span>
-                  <button
-                    className="min-h-10 rounded-md border border-stone-300 px-3 text-sm font-medium text-stone-700 transition hover:border-red-300 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-200"
-                    onClick={() => deleteTodo(todo.id)}
-                    type="button"
-                  >
-                    Delete
-                  </button>
-                </li>
+                  onDelete={deleteTodo}
+                  onToggle={toggleTodo}
+                  title={todo.title}
+                />
               ))}
             </ul>
           )}
