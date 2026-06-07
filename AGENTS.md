@@ -43,6 +43,44 @@ Use this workflow for component-oriented changes:
 7. UI Owner final report
 8. Human PR approval
 
+Default stop rule:
+
+- For a new component-oriented change, the UI Owner must stop after creating or updating `docs/history/<component-slug>/01-ui-owner-spec/spec.md`.
+- The UI Owner must then review and refine that local specification with the Human before delegating to UI Reviewer, UI Implementor, QA, or final reporting.
+- A general request to test or apply the Agentic workflow is not approval to run the whole workflow end to end.
+- Human approval to proceed must be explicit for each handoff: specification to test plan, test plan to implementation, implementation to QA, and QA to final reporting.
+- Do not create step PR records (`pr.md`) until the Human has approved the corresponding workflow decision and branch/base relationship.
+
+Current step declaration:
+
+- At the start of each workflow turn, the UI Owner should state the current workflow step and its own role.
+- The UI Owner should state the next allowed action and the actions that are not yet allowed.
+- If the Human asks a process or quality question, answer in the current role without advancing the workflow unless the Human explicitly requests the next step.
+
+Explicit approval gates:
+
+- Approval is step-specific. A broad phrase such as "looks good", "test the workflow", or "continue" is not enough to infer approval for multiple downstream steps.
+- Before moving from specification to test planning, the Human must explicitly approve the finalized specification and request or allow UI Reviewer test-plan delegation.
+- Before moving from test planning to implementation, the Human must explicitly approve the test plan and request or allow UI Implementor implementation.
+- Before moving from implementation to QA, the Human must explicitly approve QA delegation or ask for review.
+- Before final reporting or PR completion, the Human must explicitly approve the reviewed result or ask for finalization.
+
+Before delegation checklist:
+
+- Confirm the current workflow step.
+- Confirm the previous step artifact exists and has been approved by the Human.
+- Confirm the Human explicitly requested or allowed the next handoff.
+- Confirm the subagent role matches the next step.
+- Confirm the artifact path the subagent should produce.
+- Confirm the allowed file scope and forbidden scope for the subagent.
+- Confirm the branch/base relationship if a `pr.md` record will be created.
+
+Workflow quality checks:
+
+- A request to evaluate or test the Agentic workflow should default to process inspection, artifact review, and step-boundary validation.
+- Do not implement product code during a workflow quality check unless the Human explicitly asks to enter the implementation step.
+- When a workflow weakness is found, update the workflow rules or agent instructions before proceeding to downstream product work.
+
 ## Human Responsibilities
 
 The Human remains responsible for:
@@ -114,6 +152,8 @@ docs/history/
 
 The `05-ui-implementor-fix/` step is created only when QA feedback requires implementation changes.
 
+The standard structure describes the full workflow once each gate is approved. It does not imply that all step directories should be created upfront.
+
 Each step PR must include a `pr.md` artifact with:
 
 - Branch name.
@@ -126,6 +166,13 @@ Each step PR must include a `pr.md` artifact with:
 PR documents record already-approved workflow decisions. They are not the mechanism for obtaining Human approval.
 
 These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, and what decisions remain with the Human.
+
+PR document preconditions:
+
+- The relevant step artifact must be finalized.
+- The Human must have approved that step artifact.
+- The branch name and base branch must be known.
+- The `pr.md` must record a completed or approved workflow decision, not propose a decision that still needs Human approval.
 
 ## Branch and PR Flow
 
