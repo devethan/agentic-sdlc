@@ -34,21 +34,19 @@ The UI Owner owns requirements, workflow orchestration, and final agent-level ap
 
 Use this workflow for component-oriented changes:
 
-1. Human Request
-2. UI Owner specification
-3. UI Reviewer test plan
-4. UI Implementor implementation and tests
-5. UI Reviewer QA review
-6. UI Implementor feedback resolution when needed
-7. UI Owner final report
-8. Human PR approval
+1. UI Owner specification
+2. UI Reviewer test plan
+3. UI Implementor implementation and PR review loop
+
+The Human works with the UI Owner throughout the workflow. UI Reviewer and UI Implementor work only through UI Owner delegation.
 
 Default stop rule:
 
 - For a new component-oriented change, the UI Owner must stop after creating or updating `docs/history/<component-slug>/01-ui-owner-spec/spec.md`.
-- The UI Owner must then review and refine that local specification with the Human before delegating to UI Reviewer, UI Implementor, QA, or final reporting.
+- The UI Owner must then review and refine that local specification with the Human before delegating test planning, implementation, or Step 3 PR review work.
 - A general request to test or apply the Agentic workflow is not approval to run the whole workflow end to end.
-- Human approval to proceed must be explicit for each handoff: specification to test plan, test plan to implementation, implementation to QA, and QA to final reporting.
+- Human approval to proceed must be explicit for specification finalization, test-plan delegation, and test-plan finalization.
+- After the Human approves the finalized test plan and the Step 2 PR is merged or explicitly assumed merged for workflow testing, Step 3 implementation may proceed without another Human approval as long as the work stays inside the approved specification and test plan.
 - Do not create step PR records (`pr.md`) until the Human has approved the corresponding workflow decision and branch/base relationship.
 
 Current step declaration:
@@ -61,9 +59,10 @@ Explicit approval gates:
 
 - Approval is step-specific. A broad phrase such as "looks good", "test the workflow", or "continue" is not enough to infer approval for multiple downstream steps.
 - Before moving from specification to test planning, the Human must explicitly approve the finalized specification and request or allow UI Reviewer test-plan delegation.
-- Before moving from test planning to implementation, the Human must explicitly approve the test plan and request or allow UI Implementor implementation.
-- Before moving from implementation to QA, the Human must explicitly approve QA delegation or ask for review.
-- Before final reporting or PR completion, the Human must explicitly approve the reviewed result or ask for finalization.
+- Before creating the Step 2 PR, the Human must explicitly approve the finalized test plan.
+- Before starting implementation, the Step 2 PR must be merged or explicitly assumed merged for workflow testing.
+- During Step 3, UI Owner may delegate implementation to UI Implementor, PR review to UI Reviewer, and feedback resolution back to UI Implementor without additional Human approval, provided the loop remains within the approved specification and test plan.
+- Before final merge or acceptance, the Human must explicitly approve the reviewed implementation result.
 
 Before delegation checklist:
 
@@ -138,19 +137,12 @@ docs/history/
       pr.md
     03-ui-implementor-build/
       implementation-summary.md
-      pr.md
-    04-ui-reviewer-qa/
-      qa-review.md
-      pr.md
-    05-ui-implementor-fix/
-      implementation-summary.md
-      pr.md
-    06-ui-owner-final/
-      final-report.md
+      review.md
+      fix-summary.md
       pr.md
 ```
 
-The `05-ui-implementor-fix/` step is created only when QA feedback requires implementation changes.
+The `03-ui-implementor-build/fix-summary.md` artifact is created only when PR review feedback requires implementation changes.
 
 The standard structure describes the full workflow once each gate is approved. It does not imply that all step directories should be created upfront.
 
@@ -167,7 +159,7 @@ Each step PR must include a `pr.md` artifact with:
 
 PR documents record already-approved workflow decisions. They are not the mechanism for obtaining Human approval.
 
-These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, and what decisions remain with the Human.
+These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, what PR review found, and what decisions remain with the Human.
 
 PR document preconditions:
 
@@ -197,11 +189,8 @@ component feature branch -> main
 - Only the final Human-approved component PR targets `main`, such as `feat/todo-item -> main`.
 - Step branch names should include the component slug and step purpose, for example:
   - `feat/todo-item-spec`
-  - `feat/todo-item-testcase`
+  - `feat/todo-item-test-plan`
   - `feat/todo-item-implement`
-  - `feat/todo-item-qa`
-  - `feat/todo-item-fix`
-  - `feat/todo-item-final`
 - If a workflow is being simulated without real merges, `pr.md` must explicitly record the merge state as assumed, not actual.
 - UI Owner must state the component feature branch, step branch, PR target, and previous step merge state before creating a step `pr.md` or delegating to a subagent.
 
@@ -212,7 +201,7 @@ Keep handoffs scoped:
 - UI Owner receives the Human request, repository context, and product intent.
 - UI Reviewer during test planning receives the approved specification and relevant code context.
 - UI Implementor receives the approved specification, test plan, and relevant implementation files.
-- UI Reviewer during QA receives the approved specification, implementation summary, changed files, and verification results.
+- UI Reviewer during Step 3 PR review receives the approved specification, approved test plan, implementation summary, changed files, verification results, and current PR context.
 
 Subagents should return concise summaries, decisions, risks, and file references instead of raw logs unless the raw output is needed to diagnose a failure.
 
