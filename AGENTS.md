@@ -34,14 +34,51 @@ The UI Owner owns requirements, workflow orchestration, and final agent-level ap
 
 Use this workflow for component-oriented changes:
 
-1. Human Request
-2. UI Owner specification
-3. UI Reviewer test plan
-4. UI Implementor implementation and tests
-5. UI Reviewer QA review
-6. UI Implementor feedback resolution when needed
-7. UI Owner final report
-8. Human PR approval
+1. UI Owner specification
+2. UI Reviewer test plan
+3. UI Implementor implementation and PR review loop
+
+The Human works with the UI Owner throughout the workflow. UI Reviewer and UI Implementor work only through UI Owner delegation.
+
+Default stop rule:
+
+- For a new component-oriented change, the UI Owner must stop after creating or updating `docs/history/<component-slug>/01-ui-owner-spec/spec.md`.
+- The UI Owner must then review and refine that local specification with the Human before delegating test planning, implementation, or Step 3 PR review work.
+- A general request to test or apply the Agentic workflow is not approval to run the whole workflow end to end.
+- Human approval to proceed must be explicit for specification finalization, test-plan delegation, and test-plan finalization.
+- After the Human approves the finalized test plan and the Step 2 PR is merged or explicitly assumed merged for workflow testing, Step 3 implementation may proceed without another Human approval as long as the work stays inside the approved specification and test plan.
+- Do not create step PR records (`pr.md`) until the Human has approved the corresponding workflow decision and branch/base relationship.
+
+Current step declaration:
+
+- At the start of each workflow turn, the UI Owner should state the current workflow step and its own role.
+- The UI Owner should state the next allowed action and the actions that are not yet allowed.
+- If the Human asks a process or quality question, answer in the current role without advancing the workflow unless the Human explicitly requests the next step.
+
+Explicit approval gates:
+
+- Approval is step-specific. A broad phrase such as "looks good", "test the workflow", or "continue" is not enough to infer approval for multiple downstream steps.
+- Before moving from specification to test planning, the Human must explicitly approve the finalized specification and request or allow UI Reviewer test-plan delegation.
+- Before creating the Step 2 PR, the Human must explicitly approve the finalized test plan.
+- Before starting implementation, the Step 2 PR must be merged or explicitly assumed merged for workflow testing.
+- During Step 3, UI Owner may delegate implementation to UI Implementor, PR review to UI Reviewer, and feedback resolution back to UI Implementor without additional Human approval, provided the loop remains within the approved specification and test plan.
+- Before final merge or acceptance, the Human must explicitly approve the reviewed implementation result.
+
+Before delegation checklist:
+
+- Confirm the current workflow step.
+- Confirm the previous step artifact exists and has been approved by the Human.
+- Confirm the Human explicitly requested or allowed the next handoff.
+- Confirm the subagent role matches the next step.
+- Confirm the artifact path the subagent should produce.
+- Confirm the allowed file scope and forbidden scope for the subagent.
+- Confirm the branch/base relationship if a `pr.md` record will be created.
+
+Workflow quality checks:
+
+- A request to evaluate or test the Agentic workflow should default to process inspection, artifact review, and step-boundary validation.
+- Do not implement product code during a workflow quality check unless the Human explicitly asks to enter the implementation step.
+- When a workflow weakness is found, update the workflow rules or agent instructions before proceeding to downstream product work.
 
 ## Human Responsibilities
 
@@ -85,16 +122,77 @@ Agents should not bypass responsibility boundaries to unblock themselves. If the
 
 ## Expected Deliverables
 
-Use consistent artifacts for component-oriented workflow changes:
+Use consistent artifacts for component-oriented workflow changes. All component workflow artifacts live under `docs/history/<component-slug>/<step-number>-<agent-step>/`.
 
-- UI Owner specification: `spec.md`.
-- UI Reviewer test plan: `test-plan.md`.
-- UI Implementor implementation summary: `implementation-summary.md`.
-- UI Reviewer QA review: `qa-review.md`.
-- UI Implementor feedback resolution: updated `implementation-summary.md`.
-- UI Owner final approval report: `final-report.md`.
+Standard structure:
 
-These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, and what decisions remain with the Human.
+```text
+docs/history/
+  <component-slug>/
+    01-ui-owner-spec/
+      spec.md
+      pr.md
+    02-ui-reviewer-test-plan/
+      test-plan.md
+      pr.md
+    03-ui-implementor-build/
+      implementation-summary.md
+      review.md
+      fix-summary.md
+      pr.md
+```
+
+The `03-ui-implementor-build/fix-summary.md` artifact is created only when PR review feedback requires implementation changes.
+
+The standard structure describes the full workflow once each gate is approved. It does not imply that all step directories should be created upfront.
+
+Each step PR must include a `pr.md` artifact with:
+
+- Branch name.
+- Base branch.
+- Component feature branch.
+- Previous step merge state.
+- Agent role.
+- Summary.
+- Verification result.
+- Human approval state.
+
+PR documents record already-approved workflow decisions. They are not the mechanism for obtaining Human approval.
+
+These artifacts should be concise, decision-oriented, and auditable. They should explain what was requested, what was built or reviewed, what verification was performed, what PR review found, and what decisions remain with the Human.
+
+PR document preconditions:
+
+- The relevant step artifact must be finalized.
+- The Human must have approved that step artifact.
+- The branch name and base branch must be known.
+- The branch name must identify the step branch, not the component feature branch.
+- The base branch must be the component feature branch, not `main`.
+- The Human must confirm whether the previous step PR is actually merged or only assumed merged for workflow testing.
+- The `pr.md` must record a completed or approved workflow decision, not propose a decision that still needs Human approval.
+
+## Branch and PR Flow
+
+Use nested PRs for component-oriented workflow changes:
+
+```text
+main -> component feature branch
+step branch -> component feature branch
+component feature branch -> main
+```
+
+- Create one component feature branch from `main` for the whole component workflow, such as `feat/todo-item`.
+- Each workflow step creates a short-lived step branch from the latest component feature branch.
+- Each step branch opens its PR back into the component feature branch, never directly into `main`.
+- Do not create the next step branch from the previous step branch. Create it from the component feature branch after the previous step PR is merged or explicitly assumed merged for workflow testing.
+- The component feature branch gathers all approved step PRs.
+- Only the final Human-approved component PR targets `main`, such as `feat/todo-item -> main`.
+- Step branch names should include the component slug and step purpose, for example:
+  - `feat/todo-item-spec`
+  - `feat/todo-item-test-plan`
+  - `feat/todo-item-implement`
+- If a workflow is being simulated without real merges, `pr.md` must explicitly record the merge state as assumed, not actual.
+- UI Owner must state the component feature branch, step branch, PR target, and previous step merge state before creating a step `pr.md` or delegating to a subagent.
 
 ## Context Handoff Rules
 
@@ -103,7 +201,7 @@ Keep handoffs scoped:
 - UI Owner receives the Human request, repository context, and product intent.
 - UI Reviewer during test planning receives the approved specification and relevant code context.
 - UI Implementor receives the approved specification, test plan, and relevant implementation files.
-- UI Reviewer during QA receives the approved specification, implementation summary, changed files, and verification results.
+- UI Reviewer during Step 3 PR review receives the approved specification, approved test plan, implementation summary, changed files, verification results, and current PR context.
 
 Subagents should return concise summaries, decisions, risks, and file references instead of raw logs unless the raw output is needed to diagnose a failure.
 
