@@ -61,7 +61,10 @@ Explicit approval gates:
 - Before moving from specification to test planning, the Human must explicitly approve the finalized specification and request or allow UI Reviewer test-plan delegation.
 - Before creating the Step 2 PR, the Human must explicitly approve the finalized test plan.
 - Before starting implementation, the Step 2 PR must be merged or explicitly assumed merged for workflow testing.
-- During Step 3, UI Owner may delegate implementation to UI Implementor, PR review to UI Reviewer, and feedback resolution back to UI Implementor without additional Human approval, provided the loop remains within the approved specification and test plan.
+- After Step 3 implementation is complete, the UI Owner must create or update the Step 3 implementation PR before delegating PR review.
+- Step 3 PR review must not start automatically after implementation. The Human must explicitly request or allow PR review after the Step 3 implementation PR exists.
+- Step 3 PR review findings must be posted to the implementation PR as review comments or a PR conversation summary before feedback resolution is delegated. Local `review.md` is an archive copy, not a substitute for PR-visible review history.
+- During the Step 3 review loop, UI Owner may delegate PR review to UI Reviewer and feedback resolution back to UI Implementor without additional Human approval after the Human has explicitly requested or allowed that PR review loop, provided the loop remains within the approved specification and test plan.
 - Before final merge or acceptance, the Human must explicitly approve the reviewed implementation result.
 
 Before delegation checklist:
@@ -170,6 +173,7 @@ PR document preconditions:
 - The base branch must be the component feature branch, not `main`.
 - The Human must confirm whether the previous step PR is actually merged or only assumed merged for workflow testing.
 - The `pr.md` must record a completed or approved workflow decision, not propose a decision that still needs Human approval.
+- For Step 3 implementation PRs, `pr.md` must include the PR review history location or comment posting result once review has occurred.
 
 ## Branch and PR Flow
 
@@ -193,6 +197,8 @@ component feature branch -> main
   - `feat/todo-item-implement`
 - If a workflow is being simulated without real merges, `pr.md` must explicitly record the merge state as assumed, not actual.
 - UI Owner must state the component feature branch, step branch, PR target, and previous step merge state before creating a step `pr.md` or delegating to a subagent.
+- For Step 3, the implementation PR must exist before UI Reviewer PR review is delegated. The PR review loop starts only after the Human explicitly requests or allows review of that implementation PR.
+- For Step 3, UI Reviewer findings must be visible on the implementation PR before UI Owner delegates feedback resolution. If PR comments cannot be posted because tooling or permissions are unavailable, UI Owner must stop and escalate to the Human instead of treating local-only review as sufficient.
 
 ## Context Handoff Rules
 
